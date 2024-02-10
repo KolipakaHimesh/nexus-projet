@@ -1,0 +1,33 @@
+# Step 1: Load the dataset
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+
+dataset = pd.read_csv('health_data.csv')  # Assuming 'health_data.csv' is your dataset file
+
+# Step 2: Data preprocessing
+# Dropping rows with missing values
+dataset.dropna(inplace=True)
+
+# Splitting features and target variable
+X = dataset.drop(columns=['disease'])  # Assuming 'disease' is the target variable
+y = dataset['disease']
+
+# Standardizing the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Step 3: Splitting the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# Step 4: Model development
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Step 5: Model evaluation
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
